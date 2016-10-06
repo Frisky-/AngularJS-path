@@ -1,31 +1,48 @@
-angular.module('appName', [])
-    .controller('MainController', ['$scope', '$http', MainController]);
+angular.module('myApp', [])
+    .controller('MainController', ['$scope', '$http', '$interval', '$log', 'github', MainController]);
 
-function MainController($scope, $http) {
+function MainController($scope, $http, $interval, $log, github) {
 
     $scope.getUsername = function(username) {
-        $http.get('https://api.github.com/users/' + username)
-            .then(onUserComplete, onError);
+        $log.info('topkek');
+        github.getUser(username)
+          .then(onUserComplete, onError);
+        if(countdownInterval){
+          $interval.cancel(countdownInterval);
+          $scope.countdown = null;
+        }
     };
 
 
-    var onUserComplete = function(response) {
-        $scope.user = response.data;
-        $http.get($scope.user.repos_url)
+    var onUserComplete = function(data) {
+        $scope.user = data;
+        github.getRepos($scope.user)
           .then(onRepos, onError);
     };
 
-    var onError = function(response) {
-        $scope.fetchUserError = response.data.message;
+    var onError = function(data) {
+        $scope.fetchUserError = data.message;
     };
 
-    var onRepos = function (response) {
-      $scope.userRepos = response.data;
-      console.log($scope.userRepos);
+    var onRepos = function (data) {
+      $scope.userRepos = data;
+    };
+
+    var decrementCountdown = function () {
+      $scope.countdown -= 1;
+      if($scope.countdown < 1) {
+        $scope.getUsername($scope.username);
+      }
+    };
+
+    var countdownInterval = null;
+    var startCountdown = function () {
+      countdownInterval = $interval(decrementCountdown, 1000, $scope.countdown);
     };
 
 
     $scope.message = "Hell from angular!";
     $scope.repoSort = "-stargazers_count";
-
+    $scope.countdown = 5;
+    startCountdown();
 }

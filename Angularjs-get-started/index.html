@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="appName">
+<html ng-app="myApp">
     <head>
         <meta charset="utf-8">
         <title>ng-controllers</title>
@@ -15,6 +15,10 @@
             <input type="text" name="username" placeholder="Github username..." ng-model="username">
             <input type="submit" value="Search" ng-click="getUsername(username)">
         </form>
+
+        <div id="userDetail">
+          <h1>{{user.name}}</h1>
+        </div>
         <div ng-if="user">
             First name:
             {{user.name.split(' ')[0]}}
@@ -26,6 +30,7 @@
         <div ng-if="user">
             <img ng-src="{{user.avatar_url}}" alt="{{user.name.split(' ')[0]}} {{user.name.split(' ')[1]}}"/>
         </div>
+        {{countdown}}
         <div ng-if="userRepos">
 
             <select ng-model="repoSort">
@@ -64,5 +69,6 @@
         </div>
         <script src="../angular.js" charset="utf-8"></script>
         <script src="MainController.js" charset="utf-8"></script>
+        <script src="github.js" charset="utf-8"></script>
     </body>
 </html>

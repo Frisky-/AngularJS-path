@@ -2,21 +2,17 @@ angular.module('myApp')
   .controller('RepoController', ['$scope','$routeParams', 'github', RepoController]);
 
 function RepoController($scope, $routeParams, github) {
-  $scope.username = $routeParams.username;
-  $scope.repoName = $routeParams.repoName;
+  var username = $routeParams.username;
+  var reponame = $routeParams.repoName;
 
-  var getIssues = function () {
-    github.getSingleRepo($scope.username, $scope.repoName)
-      .then(function (data, onError) {
-        $scope.openIssues = data.open_issues_count;
-      });
-  }();
+  var onRepo = function (data) {
+    $scope.repo = data;
+  };
 
-  var getContributors = function () {
-    github.getRepoContributors($scope.username, $scope.repoName)
-      .then(function (data, err) {
-        console.log(data);
-        $scope.contributors = data;
-      });
-  }();
+  var onError = function (reason) {
+    $scope.error = reason;
+  };
+
+  github.repoDetails(username, reponame)
+    .then(onRepo, onError);
 }

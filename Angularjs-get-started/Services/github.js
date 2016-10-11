@@ -17,24 +17,24 @@
                });
        };
 
-       var getSingleRepo = function (username, repoName) {
-         return $http.get('https://api.github.com/repos/' + username + '/' + repoName)
-          .then(function (response) {
-            return response.data;
-          });
-       };
+       var repoDetails = function (username, reponame) {
+         var repo;
+         var url = 'https://api.github.com/repos/' + username + '/' + reponame;
 
-       var getRepoContributors = function (username, repoName) {
-         return $http.get('https://api.github.com/repos/' + username + '/' + repoName + '/contributors')
+         return $http.get(url)
           .then(function (response) {
-            return response.data;
+            repo = response.data;
+            return $http.get(url + '/contributors');
+          })
+          .then(function (response) {
+            repo.contributors = response.data;
+            return repo;
           });
        };
 
        return {
            getUser: getUser,
            getRepos: getRepos,
-           getSingleRepo: getSingleRepo,
-           getRepoContributors: getRepoContributors
+           repoDetails: repoDetails
        };
    }

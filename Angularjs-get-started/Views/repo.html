@@ -1,0 +1,13 @@
+<div>
+  <a href="#/main">go home</a>
+  <h2>{{repoName}}</h2>
+  {{openIssues}}
+  <ul>
+    <li ng-repeat="contributor in contributors">
+      <img ng-src="{{contributor.avatar_url}}" alt="" />
+      <p>
+        {{contributor.login}}
+      </p>
+    </li>
+  </ul>
+</div>
